@@ -23,7 +23,7 @@ The **Planar Enneper Surface** is a specific form of the Enneper surface that li
 
 
 Here:
-- \( u \) and \( v \) are parameters that vary over specific ranges (e.g., \( -1 \leq u \leq 1 \), \( -\pi \leq v \leq \pi \)).
+- \( u \) and \( v \) are parameters that vary over specific ranges is: -1 ≤ u ≤ 1 and -π ≤ v ≤ π
 - \( a \), \( A \), and \( B \) are constants that control the shape and scale of the surface.
 
 ### Visual Characteristics:
