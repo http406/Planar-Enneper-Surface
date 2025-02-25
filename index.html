@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planar Enneper surface</title>
+    <style>
+        body { 
+        margin: 0; 
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+        }
+        canvas { display: block; }
+        #infoButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .info-popup {
+            display: none;
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: left;
+            user-select: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <button id="infoButton">&#9432;</button>
+    <div class="info-popup" id="infoPopup">
+        <p style="text-align:center;" ><strong>Planar Enneper Surface</strong></p>
+    <p style="color:pink; text-align: center;">The Planar Enneper Surface is a specific type of minimal surface in differential geometry. Minimal surfaces are surfaces that locally minimize their area, which is equivalent to having zero mean curvature. The Enneper surface is one of the most famous examples of minimal surfaces, and the Planar Enneper Surface is a variation or specific case of the Enneper surface.</p>
+            <p style="text-align:center;">Enjoy!</p>
+    </div>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(155, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        // Parameters for Enneper Surface
+        const a = 1, B = 1, A = 1;
+        const uRange = [-1, 1], vRange = [-Math.PI, Math.PI];
+        const uSegments = 80, vSegments = 80;
+
+        // Parametric Surface Function
+        function enneperSurface(u, v, target) {
+            u = uRange[0] + u * (uRange[1] - uRange[0]);
+            v = vRange[0] + v * (vRange[1] - vRange[0]);
+
+            const x = (Math.exp(2 * a * u) / (2 * B)) * (
+                (Math.exp(-B * u) * Math.cos((2 * a - B) * v)) / (2 * a * A - A * B) -
+                (A * Math.exp(B * u) * Math.cos((2 * a + B) * v)) / (2 * a + B)
+            );
+
+            const y = (Math.exp(2 * a * u) / (2 * B)) * (
+                (Math.exp(-B * u) * Math.sin((2 * a - B) * v)) / (2 * a * A - A * B) +
+                (A * Math.exp(B * u) * Math.sin((2 * a + B) * v)) / (2 * a + B)
+            );
+
+            const z = (Math.exp(2 * a * u) / (2 * B)) * (-Math.cos(2 * a * u) / a);
+
+            target.set(x, y, z);
+        }
+
+        // Create geometry
+        const geometry = new THREE.ParametricBufferGeometry(enneperSurface, uSegments, vSegments);
+
+        // Custom Shader Material
+        const material = new THREE.ShaderMaterial({
+            vertexShader: `
+                varying vec3 vColor;
+                void main() {
+                    vColor = position * 0.5 + 0.5;  // Normalize to 0-1 range
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vColor;
+                void main() {
+                    gl_FragColor = vec4(vColor, 1.0);
+                }
+            `,
+            side: THREE.DoubleSide
+        });
+
+        // Mesh
+        const surface = new THREE.Mesh(geometry, material);
+        scene.add(surface);
+
+        // Stars background
+        const starsGeometry = new THREE.BufferGeometry();
+        const starCount = 300;
+        const starVertices = new Float32Array(starCount * 3);
+
+        for (let i = 0; i < starCount * 3; i++) {
+            starVertices[i] = (Math.random() - 0.5) * 100; // Spread stars over a large area
+        }
+
+        starsGeometry.setAttribute("position", new THREE.BufferAttribute(starVertices, 3));
+
+        const starMaterial = new THREE.PointsMaterial({ 
+            size: 0.05, 
+            vertexColors: true 
+        });
+
+        // Twinkling effect
+        const starColors = new Float32Array(starCount * 3);
+        for (let i = 0; i < starColors.length; i += 3) {
+            starColors[i] = Math.random();
+            starColors[i + 1] = Math.random();
+            starColors[i + 2] = Math.random();
+        }
+        starsGeometry.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
+
+        const stars = new THREE.Points(starsGeometry, starMaterial);
+        scene.add(stars);
+
+        // Camera position
+        camera.position.set(0, 0, 5);
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            surface.rotation.x += 0.01;
+            surface.rotation.y += 0.01;
+
+            // Twinkling stars
+            for (let i = 0; i < starColors.length; i++) {
+                starColors[i] = Math.random();
+            }
+            starsGeometry.attributes.color.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener("resize", () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+        
+        $("#infoButton").click(function() {
+            $("#infoPopup").fadeToggle();
+        });
+
+    </script>
+</body>
+  </html>
+  
