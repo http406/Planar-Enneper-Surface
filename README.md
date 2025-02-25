@@ -17,7 +17,7 @@ The **Planar Enneper Surface** is a specific type of minimal surface in differen
    - The Enneper surface exhibits symmetry and intricate patterns, making it a popular subject in mathematical visualization.
 
 ### Planar Enneper Surface:
-The **Planar Enneper Surface** is a specific form of the Enneper surface that lies in a plane or is closely related to planar geometry. The equations provided in your file describe a parametric representation of this surface:
+The **Planar Enneper Surface** is a specific form of the Enneper surface that lies in a plane or is closely related to planar geometry. The equations provided in the animation describe a parametric representation of this surface:
 
 ![Image](https://github.com/user-attachments/assets/0f0da006-8213-4107-be52-453becf7cc7f)
 
