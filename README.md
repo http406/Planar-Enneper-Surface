@@ -19,17 +19,8 @@ The **Planar Enneper Surface** is a specific type of minimal surface in differen
 ### Planar Enneper Surface:
 The **Planar Enneper Surface** is a specific form of the Enneper surface that lies in a plane or is closely related to planar geometry. The equations provided in your file describe a parametric representation of this surface:
 
-\[
-x = \frac{e^{2a}u}{2B} \left[ \frac{e^{-Bu} \cos((2a-B)v)}{2aA-AB} - \frac{Ae^{Bu} \cos((2a+B)v)}{2a+B} \right]
-\]
+https://github.com/user-attachments/assets/d4c1b1d7-8465-4c14-ab5f-c581215d673d
 
-\[
-y = \frac{e^{2au}}{2B} \left[ \frac{e^{-Bu} \sin((2a-B)v)}{2aA-AB} + \frac{Ae^{Bu} \sin((2a+B)v)}{2a+B} \right]
-\]
-
-\[
-z = \frac{e^{2au}}{2B} \left[ -\frac{\cos(2au)}{a} \right]
-\]
 
 Here:
 - \( u \) and \( v \) are parameters that vary over specific ranges (e.g., \( -1 \leq u \leq 1 \), \( -\pi \leq v \leq \pi \)).
@@ -47,3 +38,4 @@ Here:
 
 Output: 
 
+![Image](https://github.com/user-attachments/assets/d4c1b1d7-8465-4c14-ab5f-c581215d673d)
